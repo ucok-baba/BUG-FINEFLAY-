@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINEFLAY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Black+Ops+One&family=Russo+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Russo One', sans-serif;
+            background-color: #000;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Fire Butterfly Logo */
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .butterfly {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+        
+        .butterfly-wing {
+            position: absolute;
+            width: 30px;
+            height: 50px;
+            background: linear-gradient(45deg, #ff4500, #ff6347, #ff8c00);
+            border-radius: 50% 10% 50% 10%;
+            animation: flutter 0.5s infinite alternate;
+            box-shadow: 0 0 15px #ff4500, 0 0 25px #ff6347;
+        }
+        
+        .butterfly-wing.left {
+            left: 0;
+            transform-origin: right center;
+        }
+        
+        .butterfly-wing.right {
+            right: 0;
+            transform-origin: left center;
+            transform: scaleX(-1);
+        }
+        
+        .butterfly-body {
+            position: absolute;
+            width: 6px;
+            height: 30px;
+            background-color: #ff4500;
+            border-radius: 3px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #ff4500;
+        }
+        
+        @keyframes flutter {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(60deg); }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container, .attack-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .attack-container {
+            display: none;
+        }
+        
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            background: radial-gradient(circle, rgba(255,69,0,0.8) 0%, rgba(255,140,0,0.4) 40%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            animation: pulse 2s infinite alternate;
+        }
+        
+        .app-icon::before {
+            content: "FF";
+            font-family: 'Black Ops One', cursive;
+            font-size: 50px;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            100% { transform: scale(1.05); opacity: 1; }
+        }
+        
+        .app-title {
+            font-family: 'Black Ops One', cursive;
+            font-size: 42px;
+            font-weight: 700;
+            color: #ff0000;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            letter-spacing: 2px;
+        }
+        
+        .powered-by {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-family: 'Russo One', sans-serif;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .login-btn, .execute-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #fff;
+            color: #000;
+            font-family: 'Russo One', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover, .execute-btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(255, 255, 255, 0.2);
+        }
+        
+        .error-message {
+            color: #ff0000;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .developer-info {
+            position: absolute;
+            bottom: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        
+        .attack-title {
+            font-family: 'Black Ops One', cursive;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+        
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Russo One', sans-serif;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 0, 0, 0.9);
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            border-radius: 4px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .attack-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .attack-content {
+            text-align: center;
+            position: relative;
+        }
+        
+        .target-display {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ff0000;
+        }
+        
+        .progress-bar {
+            width: 300px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff4500, #ff6347, #ff8c00);
+            animation: progress 3s forwards;
+        }
+        
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        .fire-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,69,0,0.8) 0%, rgba(255,140,0,0.4) 40%, rgba(0,0,0,0) 70%);
+            animation: pulse 1.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: scale(0.95); }
+            100% { opacity: 0.8; transform: scale(1.05); }
+        }
+        
+        .lag-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background-color: rgba(255, 0, 0, 0.7);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: lag-pulse 1s infinite;
+        }
+        
+        @keyframes lag-pulse {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.9; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+        }
+        
+        .lag-text {
+            font-family: 'Black Ops One', cursive;
+            font-size: 24px;
+            color: white;
+            text-align: center;
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #ff8c00;
+            border-radius: 50%;
+            animation: sparkle 2s infinite;
+        }
+        
+        @keyframes sparkle {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            50% { transform: translateY(-20px) scale(1); opacity: 1; }
+            100% { transform: translateY(-40px) scale(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="butterfly">
+            <div class="butterfly-wing left"></div>
+            <div class="butterfly-body"></div>
+            <div class="butterfly-wing right"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="login-container" id="loginContainer">
+            <div class="app-icon"></div>
+            <h1 class="app-title">FINEFLAY</h1>
+            <p class="powered-by">Powered By @KEZXO</p>
+            
+            <div class="form-group">
+                <input type="text" id="username" placeholder="Username">
+            </div>
+            
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Password">
+            </div>
+            
+            <button class="login-btn" id="loginBtn">LOGIN</button>
+            
+            <div class="error-message" id="errorMessage">
+                Username atau password salah!
+            </div>
+        </div>
+        
+        <div class="attack-container" id="attackContainer">
+            <h2 class="attack-title">Attack Menu</h2>
+            
+            <div class="form-group">
+                <label for="target">Select Target & Bug</label>
+                <input type="text" id="target" placeholder="Target number (e.g. +62 812...)">
+            </div>
+            
+            <div class="form-group">
+                <label for="crash">Crash Infinity</label>
+                <select id="crash">
+                    <option value="1">sistem ui</option>
+                    <option value="2">kezxo sistem</option>
+                    <option value="3">YTTA</option>
+                    <option value="4">delay hard</option>
+                    <option value="5">EXECUTE🚀</option>
+                </select>
+            </div>
+            
+            <button class="execute-btn" id="executeBtn">EXECUTE TARGET</button>
+            
+            <div class="status-message" id="statusMessage">
+                Attack executed successfully!
+            </div>
+        </div>
+    </div>
+    
+    <button class="logout-btn" id="logoutBtn" style="display: none;">LOGOUT</button>
+    
+    <div class="developer-info">
+        <p>DEVELOPER: KEZXO</p>
+    </div>
+    
+    <div class="attack-animation" id="attackAnimation">
+        <div class="attack-content">
+            <div class="fire-effect"></div>
+            <div class="target-display" id="targetDisplay">+62 812-XXXX-XXXX</div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <p>Executing attack...</p>
+        </div>
+    </div>
+    
+    <div class="lag-indicator" id="lagIndicator">
+        <div class="lag-text">LAG!</div>
+        <div class="sparkle" style="top: 20%; left: 20%;"></div>
+        <div class="sparkle" style="top: 30%; right: 30%; animation-delay: 0.5s;"></div>
+        <div class="sparkle" style="bottom: 20%; left: 40%; animation-delay: 1s;"></div>
+        <div class="sparkle" style="bottom: 30%; right: 20%; animation-delay: 1.5s;"></div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const executeBtn = document.getElementById('executeBtn');
+            const loginContainer = document.getElementById('loginContainer');
+            const attackContainer = document.getElementById('attackContainer');
+            const errorMessage = document.getElementById('errorMessage');
+            const statusMessage = document.getElementById('statusMessage');
+            const attackAnimation = document.getElementById('attackAnimation');
+            const targetDisplay = document.getElementById('targetDisplay');
+            const lagIndicator = document.getElementById('lagIndicator');
+            
+            // Correct credentials
+            const correctUsername = 'KEZXO11';
+            const correctPassword = 'WEN4YU';
+            
+            loginBtn.addEventListener('click', function() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if (username === correctUsername && password === correctPassword) {
+                    // Successful login
+                    loginContainer.style.display = 'none';
+                    attackContainer.style.display = 'flex';
+                    logoutBtn.style.display = 'block';
+                    errorMessage.style.display = 'none';
+                } else {
+                    // Failed login
+                    errorMessage.style.display = 'block';
+                }
+            });
+            
+            logoutBtn.addEventListener('click', function() {
+                // Logout
+                loginContainer.style.display = 'flex';
+                attackContainer.style.display = 'none';
+                logoutBtn.style.display = 'none';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                statusMessage.style.display = 'none';
+            });
+            
+            executeBtn.addEventListener('click', function() {
+                const target = document.getElementById('target').value;
+                const crash = document.getElementById('crash').value;
+                
+                if (target) {
+                    // Show attack animation
+                    targetDisplay.textContent = target;
+                    attackAnimation.style.display = 'flex';
+                    
+                    // After animation completes
+                    setTimeout(() => {
+                        attackAnimation.style.display = 'none';
+                        
+                        // Show lag indicator
+                        lagIndicator.style.display = 'flex';
+                        
+                        // Hide lag indicator after 2 seconds
+                        setTimeout(() => {
+                            lagIndicator.style.display = 'none';
+                            statusMessage.style.display = 'block';
+                            statusMessage.textContent = `Attack executed on ${target} with crash level ${crash}! Target experiencing lag!`;
+                            
+                            // Hide message after 3 seconds
+                            setTimeout(() => {
+                                statusMessage.style.display = 'none';
+                            }, 3000);
+                        }, 2000);
+                    }, 3000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
